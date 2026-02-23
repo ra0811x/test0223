@@ -1,0 +1,1119 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>饮食模式测试（仿制版）</title>
+  <style>
+    :root {
+      --bg-a: #f2eee5;
+      --bg-b: #dae9da;
+      --card: #fffaf1;
+      --text: #1f2933;
+      --muted: #5f6c76;
+      --line: #ddd4c6;
+      --primary: #2f6f4f;
+      --primary-2: #448a66;
+      --accent: #cc8b3f;
+      --danger: #b34d3f;
+      --shadow: 0 14px 32px rgba(20, 34, 48, 0.14);
+      --radius: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at 10% 8%, rgba(204, 139, 63, 0.2), transparent 38%),
+                  radial-gradient(circle at 86% 8%, rgba(47, 111, 79, 0.14), transparent 34%),
+                  linear-gradient(140deg, var(--bg-a), var(--bg-b));
+      padding: 16px;
+      display: grid;
+      place-items: center;
+    }
+
+    .app {
+      width: min(920px, 100%);
+      background: rgba(255, 250, 241, 0.92);
+      border: 1px solid rgba(221, 212, 198, 0.85);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(4px);
+      overflow: hidden;
+    }
+
+    .header {
+      padding: 22px 24px 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tag {
+      display: inline-block;
+      border-radius: 999px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--primary);
+      background: rgba(47, 111, 79, 0.12);
+      padding: 4px 10px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(23px, 3.8vw, 34px);
+      line-height: 1.2;
+    }
+
+    .sub {
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 15px;
+    }
+
+    .content { padding: 22px 24px 26px; }
+
+    .screen { display: none; }
+    .screen.active {
+      display: block;
+      animation: fade-in 0.28s ease;
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .btn {
+      border: none;
+      border-radius: 13px;
+      padding: 12px 18px;
+      font-size: 15px;
+      font-weight: 650;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    }
+
+    .btn:active { transform: translateY(1px); }
+
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(120deg, var(--primary), var(--primary-2));
+      box-shadow: 0 8px 16px rgba(47, 111, 79, 0.27);
+    }
+
+    .btn-secondary {
+      color: #2b3642;
+      background: #efe7d8;
+      border: 1px solid #dbd0bf;
+    }
+
+    .btn-danger {
+      color: #fff;
+      background: linear-gradient(120deg, #cb6444, var(--danger));
+      box-shadow: 0 8px 16px rgba(179, 77, 63, 0.3);
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 14px;
+    }
+
+    .disclaimer {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .marketing-banner {
+      margin-top: 14px;
+      border: 1px solid #e4d5bf;
+      background: linear-gradient(120deg, #fff4df, #fffaf0);
+      border-radius: 14px;
+      padding: 12px 14px;
+      color: #624526;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .feature-grid {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .feature {
+      border: 1px solid #dfd3c0;
+      border-radius: 12px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .feature h3 {
+      margin: 0;
+      font-size: 14px;
+      color: #2e3944;
+    }
+
+    .feature p {
+      margin: 6px 0 0;
+      font-size: 13px;
+      color: #61707b;
+      line-height: 1.55;
+    }
+
+    .progress-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .progress {
+      height: 10px;
+      border-radius: 999px;
+      background: #ebe2d4;
+      overflow: hidden;
+      margin-bottom: 18px;
+    }
+
+    .progress > div {
+      height: 100%;
+      width: 0;
+      transition: width 0.28s ease;
+      background: linear-gradient(90deg, var(--accent), var(--primary));
+    }
+
+    .question {
+      margin: 0 0 14px;
+      line-height: 1.35;
+      font-size: clamp(21px, 3.2vw, 28px);
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option {
+      width: 100%;
+      text-align: left;
+      border: 1px solid #dfd5c6;
+      background: #fff;
+      color: var(--text);
+      border-radius: 14px;
+      padding: 14px 16px;
+      line-height: 1.5;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .option:hover {
+      border-color: #bcaa8a;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(20, 34, 48, 0.08);
+    }
+
+    .option.selected {
+      border-color: var(--primary);
+      background: rgba(47, 111, 79, 0.11);
+      box-shadow: 0 8px 18px rgba(20, 34, 48, 0.12);
+    }
+
+    .quiz-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 14px;
+    }
+
+    .panel {
+      background: #fff;
+      border: 1px solid #ddd3c4;
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .result-title {
+      margin: 0;
+      font-size: clamp(22px, 3vw, 30px);
+      line-height: 1.2;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .chip {
+      font-size: 13px;
+      border-radius: 999px;
+      background: #f3ebde;
+      color: #3f4952;
+      padding: 6px 10px;
+    }
+
+    .result-text {
+      margin: 0;
+      line-height: 1.7;
+      color: #2e3944;
+      font-size: 15px;
+    }
+
+    .rank {
+      margin-top: 12px;
+      color: #5a6570;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .radar-wrap {
+      display: grid;
+      place-items: center;
+      gap: 8px;
+    }
+
+    #radar-canvas {
+      width: min(100%, 330px);
+      aspect-ratio: 1;
+      border-radius: 12px;
+      background: linear-gradient(160deg, #f7f2e8, #f3eee3);
+      border: 1px solid #e2d8c8;
+    }
+
+    .radar-caption {
+      margin: 0;
+      color: #60707c;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .offer {
+      margin-top: 14px;
+      border: 1px solid #e3d6c2;
+      border-radius: 16px;
+      padding: 14px;
+      background: #fff;
+    }
+
+    .offer h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .offer-sub {
+      margin: 8px 0 10px;
+      color: #6b7782;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .offer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .offer-card {
+      border: 1px solid #e2d4be;
+      border-radius: 12px;
+      padding: 12px;
+      background: linear-gradient(160deg, #fff8ea, #fffdf7);
+    }
+
+    .offer-card strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 6px;
+      color: #3b4651;
+    }
+
+    .offer-card span {
+      font-size: 12px;
+      color: #6a7680;
+      line-height: 1.5;
+      display: block;
+    }
+
+    .price {
+      margin-top: 8px;
+      font-size: 18px;
+      color: #b05434;
+      font-weight: 700;
+    }
+
+    .copy-box {
+      margin-top: 12px;
+      border: 1px solid #dfd2bd;
+      border-radius: 12px;
+      padding: 10px;
+      background: #fcf8ef;
+    }
+
+    #note-text {
+      width: 100%;
+      min-height: 108px;
+      border: 1px solid #e1d5c2;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 13px;
+      line-height: 1.5;
+      resize: vertical;
+      font-family: "Microsoft YaHei", sans-serif;
+      color: #2d3844;
+      background: #fff;
+    }
+
+    #poster-preview {
+      display: none;
+      max-width: 240px;
+      border-radius: 10px;
+      border: 1px solid #ded3c3;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 840px) {
+      body { padding: 10px; }
+      .app { border-radius: 18px; }
+      .header, .content { padding: 16px; }
+      .result-grid, .offer-grid, .feature-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 680px) {
+      body {
+        padding: 0;
+        display: block;
+      }
+
+      .app {
+        width: 100%;
+        min-height: 100vh;
+        border-radius: 0;
+        border: none;
+      }
+
+      .header {
+        padding: calc(env(safe-area-inset-top) + 14px) 14px 12px;
+      }
+
+      .content {
+        padding: 14px 14px calc(env(safe-area-inset-bottom) + 14px);
+      }
+
+      .question {
+        font-size: 22px;
+      }
+
+      .option {
+        min-height: 58px;
+        font-size: 15px;
+      }
+
+      .quiz-actions {
+        position: sticky;
+        bottom: 0;
+        background: rgba(255, 250, 241, 0.96);
+        border-top: 1px solid #e3d9c9;
+        margin: 14px -14px -14px;
+        padding: 12px 14px calc(env(safe-area-inset-bottom) + 12px);
+      }
+
+      .quiz-actions .btn,
+      .row .btn {
+        flex: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <span class="tag">Diet Quiz + Shop Funnel</span>
+      <h1>测测你更适合哪种饮食模式</h1>
+      <p class="sub">升级版仿制：题库扩展 + 手机端适配 + 雷达图分析 + 分享海报导出 + 小红书店铺营销转化组件。</p>
+    </header>
+
+    <section class="content">
+      <div id="screen-start" class="screen active">
+        <p class="sub">共 16 道题，约 3 分钟。先测出最匹配的饮食路径，再领取对应执行包。</p>
+        <div class="row">
+          <button id="start-btn" class="btn btn-primary">开始测试</button>
+          <button id="goto-shop-start" class="btn btn-danger">进入小红书店铺</button>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature">
+            <h3>7天执行清单</h3>
+            <p>直接照着吃，减少“知道但做不到”的落差。</p>
+          </article>
+          <article class="feature">
+            <h3>外食替换指南</h3>
+            <p>奶茶、火锅、烧烤场景下也能稳住节奏。</p>
+          </article>
+          <article class="feature">
+            <h3>复盘模板</h3>
+            <p>每周 10 分钟复盘，优化体重和围度变化。</p>
+          </article>
+        </div>
+
+        <div class="marketing-banner">限时福利：完成测试后可解锁你的结果专属建议文案，一键复制发小红书笔记，提升内容转化率。</div>
+        <p class="disclaimer">说明：本测试仅作生活方式参考，不替代医疗建议。</p>
+      </div>
+
+      <div id="screen-quiz" class="screen">
+        <div class="progress-wrap">
+          <span id="question-count">第 1 / 16 题</span>
+          <span id="progress-text">6%</span>
+        </div>
+        <div class="progress"><div id="progress-bar"></div></div>
+
+        <h2 id="question-title" class="question"></h2>
+        <div id="option-list" class="options"></div>
+
+        <div class="quiz-actions">
+          <button id="prev-btn" class="btn btn-secondary">上一题</button>
+          <button id="next-btn" class="btn btn-primary">下一题</button>
+        </div>
+      </div>
+
+      <div id="screen-result" class="screen">
+        <div class="result-grid">
+          <article class="panel">
+            <h2 id="result-title" class="result-title"></h2>
+            <div id="result-chips" class="chips"></div>
+            <p id="result-text" class="result-text"></p>
+            <p id="rank-text" class="rank"></p>
+          </article>
+
+          <aside class="panel radar-wrap">
+            <canvas id="radar-canvas" width="360" height="360"></canvas>
+            <p class="radar-caption">你的 5 维画像：执行稳定性 / 减脂效率 / 代谢友好 / 心血管友好 / 社交兼容</p>
+            <img id="poster-preview" alt="海报预览" />
+          </aside>
+        </div>
+
+        <section class="offer">
+          <h3>根据你的结果，推荐这套执行包</h3>
+          <p class="offer-sub">你可以把测试当“分流入口”：先免费测评，再用对应产品承接成交与复购。</p>
+          <div class="offer-grid">
+            <article class="offer-card">
+              <strong>入门包（电子版）</strong>
+              <span>14天菜单 + 采购清单 + 外食替换表</span>
+              <div class="price">?29</div>
+            </article>
+            <article class="offer-card">
+              <strong>进阶包（训练+饮食）</strong>
+              <span>28天计划 + 打卡模板 + 每周复盘单</span>
+              <div class="price">?99</div>
+            </article>
+            <article class="offer-card">
+              <strong>1v1定制咨询</strong>
+              <span>问卷评估 + 每周调整建议（线上）</span>
+              <div class="price">?299</div>
+            </article>
+          </div>
+
+          <div class="copy-box">
+            <textarea id="note-text" readonly></textarea>
+            <div class="row">
+              <button id="copy-note-btn" class="btn btn-secondary">复制小红书笔记文案</button>
+              <button id="goto-shop-result" class="btn btn-danger">去小红书下单</button>
+            </div>
+          </div>
+        </section>
+
+        <div class="row">
+          <button id="retry-btn" class="btn btn-secondary">重新测试</button>
+          <button id="copy-btn" class="btn btn-primary">复制结果</button>
+          <button id="poster-btn" class="btn btn-primary">导出分享海报</button>
+        </div>
+        <p class="disclaimer">慢病管理、孕期/哺乳期、特殊疾病人群请优先咨询专业医生或营养师。</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const XHS_SHOP_URL = "https://www.xiaohongshu.com";
+
+    const traitKeys = ["adherence", "fatloss", "metabolic", "cardio", "social"];
+    const traitNames = ["执行稳定性", "减脂效率", "代谢友好", "心血管友好", "社交兼容"];
+
+    const questions = [
+      {
+        title: "你的首要目标更接近哪一个？",
+        options: [
+          { text: "健康优先，体重慢慢降", score: { mediterranean: 3, dash: 2 }, trait: [2, 1, 2, 3, 1] },
+          { text: "希望尽快看到体重变化", score: { lowcarb: 3, fasting: 2 }, trait: [1, 3, 2, 0, 0] },
+          { text: "控糖和代谢改善最重要", score: { lowcarb: 3, dash: 1 }, trait: [1, 2, 3, 1, 0] },
+          { text: "轻松可持续，不想焦虑", score: { flexitarian: 3, mediterranean: 1 }, trait: [3, 0, 1, 1, 3] }
+        ]
+      },
+      {
+        title: "你平时作息规律吗？",
+        options: [
+          { text: "很规律，三餐固定", score: { dash: 3, mediterranean: 2 }, trait: [2, 1, 1, 2, 1] },
+          { text: "基本规律，偶尔加班", score: { mediterranean: 2, flexitarian: 1 }, trait: [2, 1, 1, 1, 2] },
+          { text: "经常晚睡，节奏乱", score: { fasting: 2, flexitarian: 1 }, trait: [1, 1, 1, 0, 1] },
+          { text: "轮班或作息不固定", score: { flexitarian: 2, fasting: 1 }, trait: [2, 0, 1, 0, 2] }
+        ]
+      },
+      {
+        title: "你能接受多严格的规则？",
+        options: [
+          { text: "越简单越好", score: { mediterranean: 2, flexitarian: 2 }, trait: [3, 0, 1, 1, 3] },
+          { text: "有明确规则更安心", score: { fasting: 3, lowcarb: 1 }, trait: [1, 2, 1, 0, 0] },
+          { text: "可以称重打卡", score: { lowcarb: 3, dash: 1 }, trait: [1, 3, 2, 1, 0] },
+          { text: "想平衡，不极端", score: { dash: 2, mediterranean: 1 }, trait: [2, 1, 2, 2, 2] }
+        ]
+      },
+      {
+        title: "你对主食依赖程度？",
+        options: [
+          { text: "很高，离不开", score: { mediterranean: 2, dash: 2 }, trait: [2, 0, 1, 1, 2] },
+          { text: "中等，可逐步减少", score: { flexitarian: 1, dash: 1, mediterranean: 1 }, trait: [2, 1, 1, 1, 2] },
+          { text: "较低，可明显控碳", score: { lowcarb: 3 }, trait: [1, 3, 2, 0, 0] },
+          { text: "更在意进食时间", score: { fasting: 3 }, trait: [1, 2, 1, 0, 1] }
+        ]
+      },
+      {
+        title: "你外食/点外卖频率？",
+        options: [
+          { text: "几乎每天", score: { fasting: 2, flexitarian: 1 }, trait: [1, 1, 0, 0, 2] },
+          { text: "每周 3-5 次", score: { mediterranean: 2, flexitarian: 2 }, trait: [2, 1, 1, 1, 2] },
+          { text: "每周 1-2 次", score: { dash: 2, mediterranean: 1 }, trait: [2, 1, 1, 2, 1] },
+          { text: "基本自己做饭", score: { dash: 3, lowcarb: 1 }, trait: [2, 2, 2, 2, 0] }
+        ]
+      },
+      {
+        title: "你偏好的口味是什么？",
+        options: [
+          { text: "重油重辣重口", score: { lowcarb: 1, fasting: 1 }, trait: [0, 1, 0, 0, 1] },
+          { text: "清淡为主", score: { dash: 3, mediterranean: 2 }, trait: [2, 1, 1, 3, 1] },
+          { text: "都能接受", score: { mediterranean: 2, flexitarian: 2 }, trait: [2, 1, 1, 1, 3] },
+          { text: "甜食偏多", score: { fasting: 2, lowcarb: 1 }, trait: [0, 2, 0, 0, 1] }
+        ]
+      },
+      {
+        title: "你每周运动频率？",
+        options: [
+          { text: "几乎不运动", score: { dash: 2, mediterranean: 1 }, trait: [2, 0, 1, 2, 1] },
+          { text: "1-2 次轻运动", score: { mediterranean: 2, flexitarian: 1 }, trait: [2, 1, 1, 1, 2] },
+          { text: "3-4 次规律运动", score: { lowcarb: 2, fasting: 1 }, trait: [1, 2, 2, 1, 1] },
+          { text: "高频训练", score: { lowcarb: 3, fasting: 1 }, trait: [1, 3, 2, 0, 0] }
+        ]
+      },
+      {
+        title: "你最担心哪类健康问题？",
+        options: [
+          { text: "高血压/高盐", score: { dash: 3 }, trait: [2, 0, 1, 3, 1] },
+          { text: "心血管风险", score: { mediterranean: 3 }, trait: [2, 0, 1, 3, 1] },
+          { text: "胰岛素抵抗/血糖波动", score: { lowcarb: 3 }, trait: [1, 2, 3, 0, 0] },
+          { text: "暴食与时间混乱", score: { fasting: 2, flexitarian: 1 }, trait: [2, 1, 1, 0, 2] }
+        ]
+      },
+      {
+        title: "你做饭时间通常有多少？",
+        options: [
+          { text: "少于 20 分钟", score: { fasting: 2, lowcarb: 1 }, trait: [1, 1, 1, 0, 1] },
+          { text: "20-40 分钟", score: { mediterranean: 2, dash: 2 }, trait: [2, 1, 1, 2, 1] },
+          { text: "40 分钟以上", score: { dash: 2, mediterranean: 1, flexitarian: 1 }, trait: [2, 1, 1, 2, 1] },
+          { text: "完全随机", score: { flexitarian: 2 }, trait: [2, 0, 1, 0, 3] }
+        ]
+      },
+      {
+        title: "社交聚餐对你影响大吗？",
+        options: [
+          { text: "很大，经常聚餐", score: { flexitarian: 3, mediterranean: 1 }, trait: [2, 0, 1, 1, 3] },
+          { text: "中等，可控制", score: { mediterranean: 2, dash: 1 }, trait: [2, 1, 1, 1, 2] },
+          { text: "较小，能自律", score: { lowcarb: 2, dash: 1 }, trait: [1, 2, 2, 1, 0] },
+          { text: "我更容易靠时间窗口", score: { fasting: 3 }, trait: [1, 2, 1, 0, 1] }
+        ]
+      },
+      {
+        title: "你最容易失控的场景？",
+        options: [
+          { text: "夜宵", score: { fasting: 2, lowcarb: 1 }, trait: [1, 2, 1, 0, 0] },
+          { text: "奶茶甜品", score: { lowcarb: 2, fasting: 1 }, trait: [0, 2, 1, 0, 1] },
+          { text: "压力暴食", score: { flexitarian: 2, mediterranean: 1 }, trait: [2, 0, 1, 1, 2] },
+          { text: "我整体比较稳定", score: { dash: 2, mediterranean: 1 }, trait: [3, 1, 1, 2, 1] }
+        ]
+      },
+      {
+        title: "你对早餐的习惯是？",
+        options: [
+          { text: "每天吃，且较均衡", score: { dash: 2, mediterranean: 2 }, trait: [2, 1, 1, 2, 1] },
+          { text: "偶尔吃", score: { flexitarian: 1, mediterranean: 1 }, trait: [1, 1, 1, 1, 2] },
+          { text: "常常不吃", score: { fasting: 2 }, trait: [1, 1, 1, 0, 1] },
+          { text: "看当天计划", score: { fasting: 1, flexitarian: 1 }, trait: [1, 1, 1, 0, 2] }
+        ]
+      },
+      {
+        title: "你希望体重变化速度？",
+        options: [
+          { text: "稳一点，别反弹", score: { mediterranean: 2, dash: 2 }, trait: [3, 1, 2, 2, 2] },
+          { text: "中等速度可接受", score: { lowcarb: 1, fasting: 1, dash: 1 }, trait: [2, 2, 1, 1, 1] },
+          { text: "越快越好", score: { lowcarb: 3, fasting: 2 }, trait: [0, 3, 1, 0, 0] },
+          { text: "不追求速度，重在执行", score: { flexitarian: 3 }, trait: [3, 0, 1, 1, 3] }
+        ]
+      },
+      {
+        title: "你对动物蛋白的需求？",
+        options: [
+          { text: "较高，需要肉类满足感", score: { lowcarb: 2, mediterranean: 1 }, trait: [1, 2, 1, 0, 0] },
+          { text: "适中，鱼禽豆都行", score: { mediterranean: 3, dash: 1 }, trait: [2, 1, 2, 2, 2] },
+          { text: "偏低，想多吃植物蛋白", score: { flexitarian: 3, dash: 1 }, trait: [2, 0, 1, 2, 3] },
+          { text: "无所谓，按计划吃", score: { fasting: 1, dash: 1, mediterranean: 1 }, trait: [1, 1, 1, 1, 1] }
+        ]
+      },
+      {
+        title: "你对记录饮食的接受度？",
+        options: [
+          { text: "愿意详细记录", score: { lowcarb: 3, dash: 1 }, trait: [1, 3, 2, 1, 0] },
+          { text: "简要记录即可", score: { mediterranean: 2, dash: 1 }, trait: [2, 1, 1, 2, 1] },
+          { text: "不想记录", score: { flexitarian: 2, fasting: 1 }, trait: [2, 0, 1, 0, 3] },
+          { text: "只记录体重和腰围", score: { fasting: 2, lowcarb: 1 }, trait: [1, 2, 1, 0, 1] }
+        ]
+      },
+      {
+        title: "你理想中的长期状态是？",
+        options: [
+          { text: "家人可一起吃，稳定健康", score: { mediterranean: 3, dash: 2 }, trait: [3, 1, 2, 3, 2] },
+          { text: "用进食窗口管理热量", score: { fasting: 3 }, trait: [1, 2, 1, 0, 1] },
+          { text: "控碳后精神和体重都更稳", score: { lowcarb: 3 }, trait: [1, 3, 3, 0, 0] },
+          { text: "弹性执行，社交影响最小", score: { flexitarian: 3 }, trait: [3, 0, 1, 1, 3] }
+        ]
+      }
+    ];
+
+    const diets = {
+      mediterranean: {
+        name: "地中海饮食",
+        tags: ["均衡", "心血管友好", "家庭可执行"],
+        desc: "你更适合以蔬果、全谷、豆类、坚果和橄榄油为核心的均衡模式。它不激进，但稳定、可持续、复食风险低。",
+        baseRadar: [86, 66, 79, 91, 82]
+      },
+      dash: {
+        name: "DASH 饮食",
+        tags: ["控盐", "血压友好", "结构清晰"],
+        desc: "你适配清淡且结构化的饮食路线。DASH 更强调低钠、高钾、高纤维，适合把健康指标放在第一优先级的人。",
+        baseRadar: [83, 61, 74, 94, 72]
+      },
+      lowcarb: {
+        name: "低碳饮食",
+        tags: ["控糖", "减脂效率", "反馈明显"],
+        desc: "你对规则执行和目标反馈更敏感，低碳模式能较快帮助控制食欲和血糖波动，但要注意蔬菜、纤维、优质脂肪的平衡。",
+        baseRadar: [66, 89, 86, 62, 54]
+      },
+      fasting: {
+        name: "间歇性断食（16:8 / 5:2）",
+        tags: ["时间管理", "轻规则", "省时"],
+        desc: "你更适合通过时间窗口来约束总摄入，执行上更直观。重点是避免窗口内暴食，并保证蛋白、蔬果和微量营养素充足。",
+        baseRadar: [72, 78, 70, 58, 69]
+      },
+      flexitarian: {
+        name: "弹性素食（Flexitarian）",
+        tags: ["灵活", "压力低", "社交友好"],
+        desc: "你最重视长期可持续。以植物性食物为主、动物蛋白适度补充的弹性模式，更容易和你的工作节奏与社交场景兼容。",
+        baseRadar: [91, 56, 68, 73, 93]
+      }
+    };
+
+    const startScreen = document.getElementById("screen-start");
+    const quizScreen = document.getElementById("screen-quiz");
+    const resultScreen = document.getElementById("screen-result");
+
+    const startBtn = document.getElementById("start-btn");
+    const gotoShopStart = document.getElementById("goto-shop-start");
+    const prevBtn = document.getElementById("prev-btn");
+    const nextBtn = document.getElementById("next-btn");
+    const retryBtn = document.getElementById("retry-btn");
+    const copyBtn = document.getElementById("copy-btn");
+    const posterBtn = document.getElementById("poster-btn");
+    const copyNoteBtn = document.getElementById("copy-note-btn");
+    const gotoShopResult = document.getElementById("goto-shop-result");
+
+    const questionCount = document.getElementById("question-count");
+    const progressText = document.getElementById("progress-text");
+    const progressBar = document.getElementById("progress-bar");
+    const questionTitle = document.getElementById("question-title");
+    const optionList = document.getElementById("option-list");
+
+    const resultTitle = document.getElementById("result-title");
+    const resultChips = document.getElementById("result-chips");
+    const resultText = document.getElementById("result-text");
+    const rankText = document.getElementById("rank-text");
+    const posterPreview = document.getElementById("poster-preview");
+    const noteText = document.getElementById("note-text");
+
+    const radarCanvas = document.getElementById("radar-canvas");
+    const radarCtx = radarCanvas.getContext("2d");
+
+    let currentIndex = 0;
+    let answers = Array(questions.length).fill(null);
+    let lastResult = null;
+
+    function openShop() {
+      window.open(XHS_SHOP_URL, "_blank");
+    }
+
+    function showScreen(target) {
+      [startScreen, quizScreen, resultScreen].forEach((s) => s.classList.remove("active"));
+      target.classList.add("active");
+    }
+
+    function renderQuestion() {
+      const q = questions[currentIndex];
+      const total = questions.length;
+      const pct = Math.round(((currentIndex + 1) / total) * 100);
+
+      questionTitle.textContent = q.title;
+      questionCount.textContent = `第 ${currentIndex + 1} / ${total} 题`;
+      progressText.textContent = `${pct}%`;
+      progressBar.style.width = `${pct}%`;
+
+      optionList.innerHTML = "";
+      q.options.forEach((opt, idx) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "option";
+        button.textContent = opt.text;
+        if (answers[currentIndex] === idx) {
+          button.classList.add("selected");
+        }
+
+        button.addEventListener("click", () => {
+          answers[currentIndex] = idx;
+          renderQuestion();
+        });
+
+        optionList.appendChild(button);
+      });
+
+      prevBtn.disabled = currentIndex === 0;
+      prevBtn.style.opacity = currentIndex === 0 ? "0.56" : "1";
+      nextBtn.textContent = currentIndex === total - 1 ? "查看结果" : "下一题";
+    }
+
+    function calcScores() {
+      const dietScore = { mediterranean: 0, dash: 0, lowcarb: 0, fasting: 0, flexitarian: 0 };
+      const traitRaw = [0, 0, 0, 0, 0];
+
+      answers.forEach((optIdx, qIdx) => {
+        const option = questions[qIdx].options[optIdx];
+
+        Object.entries(option.score).forEach(([k, v]) => {
+          dietScore[k] += v;
+        });
+
+        option.trait.forEach((v, i) => {
+          traitRaw[i] += v;
+        });
+      });
+
+      const ranking = Object.entries(dietScore).sort((a, b) => b[1] - a[1]);
+      return { dietScore, ranking, traitRaw };
+    }
+
+    function mixRadar(base, traitRaw) {
+      const traitMax = questions.length * 3;
+      const userTrait = traitRaw.map((v) => Math.round((v / traitMax) * 100));
+      return base.map((v, i) => Math.max(35, Math.min(96, Math.round(v * 0.62 + userTrait[i] * 0.38))));
+    }
+
+    function drawRadar(values) {
+      const ctx = radarCtx;
+      const w = radarCanvas.width;
+      const h = radarCanvas.height;
+      const cx = w / 2;
+      const cy = h / 2;
+      const radius = 118;
+      const levels = 5;
+
+      ctx.clearRect(0, 0, w, h);
+
+      ctx.fillStyle = "#f7f2e8";
+      ctx.fillRect(0, 0, w, h);
+
+      for (let lv = levels; lv >= 1; lv -= 1) {
+        const r = (radius / levels) * lv;
+        ctx.beginPath();
+        for (let i = 0; i < traitKeys.length; i += 1) {
+          const angle = -Math.PI / 2 + (Math.PI * 2 * i) / traitKeys.length;
+          const x = cx + Math.cos(angle) * r;
+          const y = cy + Math.sin(angle) * r;
+          if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.strokeStyle = lv % 2 === 0 ? "#ddd0bb" : "#e7ddcc";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+
+      for (let i = 0; i < traitKeys.length; i += 1) {
+        const angle = -Math.PI / 2 + (Math.PI * 2 * i) / traitKeys.length;
+        const x = cx + Math.cos(angle) * radius;
+        const y = cy + Math.sin(angle) * radius;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(x, y);
+        ctx.strokeStyle = "#d8ccb8";
+        ctx.stroke();
+      }
+
+      ctx.beginPath();
+      values.forEach((v, i) => {
+        const angle = -Math.PI / 2 + (Math.PI * 2 * i) / traitKeys.length;
+        const r = (v / 100) * radius;
+        const x = cx + Math.cos(angle) * r;
+        const y = cy + Math.sin(angle) * r;
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      });
+      ctx.closePath();
+      ctx.fillStyle = "rgba(47, 111, 79, 0.28)";
+      ctx.strokeStyle = "#2f6f4f";
+      ctx.lineWidth = 2;
+      ctx.fill();
+      ctx.stroke();
+
+      values.forEach((v, i) => {
+        const angle = -Math.PI / 2 + (Math.PI * 2 * i) / traitKeys.length;
+        const r = (v / 100) * radius;
+        const x = cx + Math.cos(angle) * r;
+        const y = cy + Math.sin(angle) * r;
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = "#2f6f4f";
+        ctx.fill();
+      });
+
+      ctx.fillStyle = "#3a434d";
+      ctx.font = "14px 'Microsoft YaHei', sans-serif";
+      traitNames.forEach((name, i) => {
+        const angle = -Math.PI / 2 + (Math.PI * 2 * i) / traitKeys.length;
+        const r = radius + 28;
+        const x = cx + Math.cos(angle) * r;
+        const y = cy + Math.sin(angle) * r;
+        const width = ctx.measureText(name).width;
+        ctx.fillText(name, x - width / 2, y + 5);
+      });
+    }
+
+    function buildXhsNote(result) {
+      return [
+        "我刚做了一个饮食匹配测试，结果是：" + result.winner.name,
+        "",
+        "我的5维画像：",
+        `执行稳定性 ${result.values[0]} / 减脂效率 ${result.values[1]} / 代谢友好 ${result.values[2]} / 心血管友好 ${result.values[3]} / 社交兼容 ${result.values[4]}`,
+        "",
+        "这次先按方案执行 14 天：",
+        "1) 三餐结构先固定",
+        "2) 外食按替换表点单",
+        "3) 每周复盘一次体重+围度",
+        "",
+        "如果你也想要同款执行清单，我放在店铺里了，评论区可交流。",
+        "#饮食管理 #减脂 #健康生活 #自律打卡"
+      ].join("\n");
+    }
+
+    function showResult() {
+      const { ranking, traitRaw } = calcScores();
+      const [top, second] = ranking;
+      const winner = diets[top[0]];
+      const runnerUp = diets[second[0]];
+      const values = mixRadar(winner.baseRadar, traitRaw);
+
+      resultTitle.textContent = `你的匹配结果：${winner.name}`;
+      resultText.textContent = winner.desc;
+      resultChips.innerHTML = "";
+      winner.tags.forEach((tag) => {
+        const el = document.createElement("span");
+        el.className = "chip";
+        el.textContent = tag;
+        resultChips.appendChild(el);
+      });
+
+      rankText.textContent = `次优方案：${runnerUp.name}。建议先执行 3-4 周，再根据体重、围度、精力和饥饿感调整。`;
+      drawRadar(values);
+
+      lastResult = {
+        winner,
+        second: runnerUp,
+        values
+      };
+
+      noteText.value = buildXhsNote(lastResult);
+      posterPreview.style.display = "none";
+      posterPreview.removeAttribute("src");
+      showScreen(resultScreen);
+    }
+
+    function wrapText(ctx, text, maxWidth) {
+      const chars = Array.from(text);
+      const lines = [];
+      let line = "";
+
+      chars.forEach((ch) => {
+        const test = line + ch;
+        if (ctx.measureText(test).width > maxWidth && line) {
+          lines.push(line);
+          line = ch;
+        } else {
+          line = test;
+        }
+      });
+      if (line) lines.push(line);
+      return lines;
+    }
+
+    function exportPoster() {
+      if (!lastResult) return;
+
+      const canvas = document.createElement("canvas");
+      canvas.width = 1080;
+      canvas.height = 1920;
+      const ctx = canvas.getContext("2d");
+
+      const gradient = ctx.createLinearGradient(0, 0, 1080, 1920);
+      gradient.addColorStop(0, "#f4efe4");
+      gradient.addColorStop(1, "#dceadf");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "rgba(255, 250, 241, 0.9)";
+      ctx.strokeStyle = "#decfb9";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.roundRect(70, 80, 940, 1760, 38);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = "#2f6f4f";
+      ctx.font = "bold 56px 'Microsoft YaHei', sans-serif";
+      ctx.fillText("饮食模式测试结果", 130, 190);
+
+      ctx.fillStyle = "#2d3743";
+      ctx.font = "bold 48px 'Microsoft YaHei', sans-serif";
+      ctx.fillText(lastResult.winner.name, 130, 280);
+
+      ctx.fillStyle = "#55616c";
+      ctx.font = "32px 'Microsoft YaHei', sans-serif";
+      ctx.fillText(`次优方案：${lastResult.second.name}`, 130, 336);
+
+      const chips = lastResult.winner.tags.join("  /  ");
+      ctx.fillStyle = "#a06f38";
+      ctx.font = "30px 'Microsoft YaHei', sans-serif";
+      ctx.fillText(chips, 130, 392);
+
+      ctx.drawImage(radarCanvas, 210, 450, 660, 660);
+
+      ctx.fillStyle = "#2e3944";
+      ctx.font = "34px 'Microsoft YaHei', sans-serif";
+      const lines = wrapText(ctx, lastResult.winner.desc, 820);
+      let y = 1190;
+      lines.slice(0, 6).forEach((line) => {
+        ctx.fillText(line, 130, y);
+        y += 52;
+      });
+
+      ctx.fillStyle = "#64727d";
+      ctx.font = "28px 'Microsoft YaHei', sans-serif";
+      ctx.fillText("5维画像：执行稳定性 / 减脂效率 / 代谢友好 / 心血管友好 / 社交兼容", 130, 1605);
+      ctx.fillText(`得分：${lastResult.values.join(" / ")}`, 130, 1660);
+
+      ctx.fillStyle = "#6d7984";
+      ctx.font = "26px 'Microsoft YaHei', sans-serif";
+      ctx.fillText("本测试仅作生活方式参考，不替代专业医疗建议", 130, 1750);
+
+      const url = canvas.toDataURL("image/png");
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "diet-quiz-poster.png";
+      a.click();
+
+      posterPreview.src = url;
+      posterPreview.style.display = "block";
+    }
+
+    startBtn.addEventListener("click", () => {
+      currentIndex = 0;
+      answers = Array(questions.length).fill(null);
+      renderQuestion();
+      showScreen(quizScreen);
+    });
+
+    gotoShopStart.addEventListener("click", openShop);
+    gotoShopResult.addEventListener("click", openShop);
+
+    prevBtn.addEventListener("click", () => {
+      if (currentIndex > 0) {
+        currentIndex -= 1;
+        renderQuestion();
+      }
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (answers[currentIndex] === null) {
+        alert("请先选择一个选项再继续。");
+        return;
+      }
+
+      if (currentIndex === questions.length - 1) {
+        showResult();
+      } else {
+        currentIndex += 1;
+        renderQuestion();
+      }
+    });
+
+    retryBtn.addEventListener("click", () => {
+      showScreen(startScreen);
+    });
+
+    copyBtn.addEventListener("click", async () => {
+      if (!lastResult) return;
+      const txt = `${resultTitle.textContent}\n${resultText.textContent}\n${rankText.textContent}`;
+      try {
+        await navigator.clipboard.writeText(txt);
+        copyBtn.textContent = "已复制";
+        setTimeout(() => { copyBtn.textContent = "复制结果"; }, 1200);
+      } catch {
+        alert("复制失败，请手动复制。");
+      }
+    });
+
+    copyNoteBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(noteText.value);
+        copyNoteBtn.textContent = "文案已复制";
+        setTimeout(() => { copyNoteBtn.textContent = "复制小红书笔记文案"; }, 1200);
+      } catch {
+        alert("复制失败，请手动复制。");
+      }
+    });
+
+    posterBtn.addEventListener("click", exportPoster);
+  </script>
+</body>
+</html>
